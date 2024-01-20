@@ -1,6 +1,6 @@
 #!/bin/bash
 
-JAVA_VERSION=java-21-openjdk-amd64
+JAVA_VERSION=java-1.21.0-openjdk-amd64
 CAS_VERSION="7.0.0"
 
 sudo update-java-alternatives -s $JAVA_VERSION
@@ -17,4 +17,9 @@ PACKAGE=v${CAS_VERSION}.tar.gz
 }
 cd ${CAS_DIR}
 
-./gradlew build install --parallel -x test -x javadoc -x check --build-cache --configure-on-demand 2>&1 > log-cas-server-${CAS_VERSION}.txt
+./gradlew build \
+    -Djava.net.preferIPv4Stack=true \
+    --parallel \
+    -x test -x javadoc -x check \
+    --build-cache \
+    --configure-on-demand 2>&1 > log-cas-server-${CAS_VERSION}.txt

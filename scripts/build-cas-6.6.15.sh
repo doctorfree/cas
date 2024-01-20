@@ -1,7 +1,7 @@
 #!/bin/bash
 
 JAVA_VERSION=java-1.11.0-openjdk-amd64
-CAS_VERSION="6.6.14"
+CAS_VERSION="6.6.15"
 
 sudo update-java-alternatives -s $JAVA_VERSION
 export JAVA_HOME=/usr/lib/jvm/$JAVA_VERSION/
@@ -17,4 +17,4 @@ PACKAGE=v${CAS_VERSION}.tar.gz
 }
 cd ${CAS_DIR}
 
-./gradlew build install --parallel -x test -x javadoc -x check --build-cache --configure-on-demand 2>&1 > log-cas-server-${CAS_VERSION}.txt
+./gradlew build --parallel -x test -x javadoc -x check --build-cache --configure-on-demand 2>&1 > log-cas-server-${CAS_VERSION}.txt

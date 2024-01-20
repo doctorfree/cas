@@ -1,0 +1,7 @@
+#!/bin/bash
+
+rm -f *.gz
+rm -rf scripts/cas-*
+rm -rf scripts/*.gz
+
+./gradlew clean build

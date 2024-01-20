@@ -47,3 +47,16 @@ apache-tomcat.zip
 config-metadata.properties
 node-modules
 package-lock.json
+Bak/
+Downloads/
+Logs/
+jdk-*
+*.gz
+scripts/cas-*
+scripts/*.gz
+
+# vim files
+.*.sw[a-z]
+*.un~
+Session.vim
+.netrwhist

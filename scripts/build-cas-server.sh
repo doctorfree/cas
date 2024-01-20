@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #JAVA_VERSION=java-1.11.0-openjdk-amd64
-JAVA_VERSION=java-21-openjdk-amd64
+JAVA_VERSION=java-1.21.0-openjdk-amd64
 
 sudo update-java-alternatives -s $JAVA_VERSION
 export JAVA_HOME=/usr/lib/jvm/$JAVA_VERSION/

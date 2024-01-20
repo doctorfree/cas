@@ -1,16 +1,113 @@
-# IMPORTANT NOTE<br/>******************************************************<br/>This repository is always automatically generated from the CAS Initializr. Do NOT submit pull requests here as the change-set will be overwritten on the next sync.To learn more, please visit the [CAS documentation](https://apereo.github.io/cas).<br/>******************************************************<br/>
-Apereo CAS WAR Overlay Template
-=====================================
+# CAS Identity and Single Sign On Server and WAR Overlay Build
+
+Build, configuration, and integration of CAS Identity & Single Sign On
+for all earthlings and beyond.
+
+See https://apereo.github.io/cas/development/planning/Getting-Started.html
+to get started with CAS.
+
+## Requirements
+
+See https://apereo.github.io/cas/development/planning/Installation-Requirements.html
+
+- [JDK 21](https://openjdk.java.net/projects/jdk/21)
+- [Apache Tomcat](http://tomcat.apache.org)
+- [Git](https://git-scm.com/downloads)
+- Operating system (Linux preferably)
+- Internet connectivity
+- Minimum hardware requirements
+  - dual-core 3.00Ghz processor
+  - 4GB of memory
+
+## Deployment
+
+See https://apereo.github.io/cas/development/installation/WAR-Overlay-Installation.html
+
+### WAR Overlay Method
+
+Rather than downloading the CAS codebase and building from source, overlays
+allow you to download a pre-built vanilla CAS web application server provided
+by the project itself and override/insert specific behavior into it. At build
+time, the build installation process will attempt to download the provided
+binary artifact first. Then the tool will locate your configuration files and
+settings made available inside the same project directory and will merge those
+into the downloaded artifact in order to produce one wholesome archive
+(i.e. `cas.war`). Overridden artifacts may include resources, java classes,
+images, CSS and javascript files. In order for the merge process to successfully
+execute, the location and names of the overridden artifacts locally must EXACTLY
+match that of those provided by the project inside the originally downloaded
+archive. Java code in the overlay project's `src/main/java` folder and resources
+in `src/main/resources` will end up in the `WEB-INF\classes` folder of `cas.war`
+and they will be loaded by the classloader instead of resources with the same
+names in jar files inside `WEB-INF\lib`.
+
+### Managing Overlays
+
+Most if not all aspects of CAS can be controlled by adding, removing,
+or modifying files in the overlay; it's also possible and indeed common
+to customize the behavior of CAS by adding third-party components that
+implement CAS APIs as Java source files or dependency references.
+
+The process of working with an overlay can be summarized in the following steps:
+
+- Start with and build the provided basic vanilla build/deployment.
+- Identify the artifacts from the produced build that need changes. These artifacts are generally produced by the build in the build directory for Gradle.
+- Copy the identified artifacts from the identified above directories over to the `src/main/resources` directory.
+  - Create the `src/main/resources` directories, if they don't already exist.
+  - Copied paths and file names MUST EXACTLY MATCH their build counterparts, or the change won't take effect.
+- After changes, rebuild and repeat the process as many times as possible.
+- Double check your changes inside the built binary artifact to make sure the overlay process is working.
+
+### CAS Overlay Initializr
+
+Apereo CAS Initializr is a service provided by the Apereo CAS project that
+allows you as the deployer to generate CAS WAR Overlay projects on the fly
+with just what you need to start quickly.
+
+To learn more about the initializr,
+[review this guide](https://apereo.github.io/cas/development/installation/WAR-Overlay-Initializr.html).
+
+### Dockerized Deployment
+
+See
+[this guide](https://apereo.github.io/cas/development/installation/Docker-Installation.html)
+for more info on dockerized deployment.
+
+### Servlet Container
+
+CAS can be deployed to a number of servlet containers. See
+[this guide](https://apereo.github.io/cas/development/installation/Configuring-Servlet-Container.html)
+for more info on servlet containers.
+
+### Dependency Management
+
+Each release of CAS provides a curated list of dependencies it supports. In
+practice, you do not need to provide a version for any of these dependencies in
+your build configuration as the CAS distribution is managing that for you. When
+you upgrade CAS itself, these dependencies will be upgraded as well in a consistent way.
+
+The curated list of dependencies contains a refined list of third party libraries.
+The list is available as a standard Bills of Materials (BOM). Not everyone likes
+inheriting from the BOM. You may have your own corporate standard parent that you
+need to use, or you may just prefer to explicitly declare all your configuration.
+
+To take advantage of the CAS BOM, see
+[this guide](https://apereo.github.io/cas/development/installation/BOM-Dependency-Management.html).
+
+## CAS Server build scripts
+
+The CAS Server build scripts reside in the `scripts` folder.
+
+## Apereo CAS WAR Overlay Template
 
 WAR Overlay Type: `cas-overlay`
 
-# Versions
-   
+### Versions
 
 - CAS Server `7.1.0-SNAPSHOT`
 - JDK `21`
                      
-# Build
+### Build
 
 To build the project, use:
 
@@ -35,7 +132,7 @@ rm -rf $HOME/.gradle/caches/
 
 Same strategy applies to Windows too, provided you switch `$HOME` to its equivalent in the above command.
 
-# Keystore
+### Keystore
 
 For the server to run successfully, you might need to create a keystore file.
 This can either be done using the JDK's `keytool` utility or via the following command:
@@ -47,7 +144,7 @@ This can either be done using the JDK's `keytool` utility or via the following c
 Use the password `changeit` for both the keystore and the key/certificate entries. 
 Ensure the keystore is loaded up with keys and certificates of the server.
 
-## Extension Modules
+### Extension Modules
 
 Extension modules may be specified under the `dependencies` block of the [Gradle build script](build.gradle):
 
@@ -64,15 +161,14 @@ To collect the list of all project modules and dependencies in the overlay:
 ./gradlew[.bat] dependencies
 ```                                                                       
 
-# Deployment
+### Deployment
 
 On a successful deployment via the following methods, the server will be available at:
 
 
 * `https://localhost:8443/cas`
 
-
-## Executable WAR
+### Executable WAR
 
 Run the server web application as an executable WAR. Note that running an executable WAR requires CAS to use an embedded container such as Apache Tomcat, Jetty, etc.
 
@@ -106,15 +202,15 @@ Run the CAS web application as a *standalone* executable WAR:
 ./gradlew[.bat] clean executable
 ```
 
-## External
+### External
 
 Deploy the binary web application file in `build/libs` after a successful build to a servlet container of choice.
 
-# Docker
+## Docker
 
 The following strategies outline how to build and deploy CAS Docker images.
 
-## Jib
+### Jib
 
 The overlay embraces the [Jib Gradle Plugin](https://github.com/GoogleContainerTools/jib) to provide easy-to-use out-of-the-box tooling for building CAS docker images. Jib is an open-source Java containerizer from Google that lets Java developers build containers using the tools they know. It is a container image builder that handles all the steps of packaging your application into a container image. It does not require you to write a Dockerfile or have Docker installed, and it is directly integrated into the overlay.
 
@@ -123,7 +219,7 @@ The overlay embraces the [Jib Gradle Plugin](https://github.com/GoogleContainerT
 ./gradlew build jibDockerBuild
 ```
 
-## Dockerfile
+### Dockerfile
 
 You can also use the Docker tooling and the provided `Dockerfile` to build and run.
 There are dedicated Gradle tasks available to build and push Docker images using the supplied `DockerFile`:
@@ -147,7 +243,7 @@ A `docker-compose.yml` is also provided to orchestrate the build:
 docker-compose build
 ```
 
-# CAS Command-line Shell
+## CAS Command-line Shell
 
 To launch into the CAS command-line shell:
 
@@ -155,7 +251,7 @@ To launch into the CAS command-line shell:
 ./gradlew[.bat] downloadShell runShell
 ```
 
-# Retrieve Overlay Resources
+## Retrieve Overlay Resources
 
 To fetch and overlay a CAS resource or view, use:
 
@@ -163,7 +259,7 @@ To fetch and overlay a CAS resource or view, use:
 ./gradlew[.bat] getResource -PresourceName=[resource-name]
 ```
 
-# Create User Interface Themes Structure
+## Create User Interface Themes Structure
 
 You can use the overlay to construct the correct directory structure for custom user interface themes:
 
@@ -190,7 +286,7 @@ The generated directory structure should match the following:
 HTML templates and fragments can be moved into the above directory structure, 
 and the theme may be assigned to applications for use.
 
-# List Overlay Resources
+## List Overlay Resources
  
 To list all available CAS views and templates:
 
@@ -204,7 +300,7 @@ To unzip and explode the CAS web application file and the internal resources jar
 ./gradlew[.bat] explodeWar
 ```
 
-# Configuration
+## Configuration
 
 - The `etc` directory contains the configuration files and directories that need to be copied to `/etc/cas/config`.
 
@@ -214,7 +310,7 @@ To unzip and explode the CAS web application file and the internal resources jar
 
 - The specifics of the build are controlled using the `gradle.properties` file.
 
-## Configuration Metadata
+### Configuration Metadata
 
 Configuration metadata allows you to export collection of CAS properties as a report into a file 
 that can later be examined. You will find a full list of CAS settings along with notes, types, default and accepted values:
@@ -223,7 +319,7 @@ that can later be examined. You will find a full list of CAS settings along with
 ./gradlew exportConfigMetadata
 ```                           
 
-# Puppeteer
+## Puppeteer
 
 > [Puppeteer](https://pptr.dev/) is a Node.js library which provides a high-level API to control Chrome/Chromium over the DevTools Protocol.
 > Puppeteer runs in headless mode by default, but can be configured to run in full (non-headless) Chrome/Chromium.
@@ -249,7 +345,7 @@ The following defaults are assumed:
 You may of course need to make adjustments to account for your specific environment and deployment settings, URLs, etc.
 
 
-# Duct
+## Duct
 
 `duct` is a Gradle task to do quick smoke tests of multi-node CAS high-availability deployments. In particular, it tests correctness of ticket
 sharing between multiple individual CAS server nodes backed by distributed ticket registries such as Hazelcast, Redis, etc.
@@ -291,7 +387,7 @@ You may also supply the following options:
 - `duct.count`: Number of iterations, i.e. `5` to execute the scenario.
 
 
-# OpenRewrite
+## OpenRewrite
 
 [OpenRewrite](https://docs.openrewrite.org/) is a tool used by the CAS in form of a Gradle plugin
 that allows the project to upgrade in place. It works by making changes to the project structure representing
